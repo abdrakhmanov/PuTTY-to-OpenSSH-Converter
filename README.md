@@ -10,7 +10,7 @@ On a Mac [Shuttle](http://fitztrev.github.io/shuttle/) will be the simplest tool
 
 To speed up the migration convert your list of accounts from PuTTY registery key to a Shuttle format which is in JSON.
 
-## Windows: Export Registery Keys
+## Windows: Export Registry Keys
 
 The below command should export all your sessions to the a file `putty.reg` on your desktop.
 
@@ -36,4 +36,5 @@ cp ./shuttle.json ~/.shuttle.json
 ## Links
 
 https://github.com/fitztrev/shuttle
+
 http://www.chiark.greenend.org.uk/~sgtatham/putty/
