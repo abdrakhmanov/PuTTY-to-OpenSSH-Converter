@@ -42,35 +42,43 @@ foreach ( $lines as $line ) {
 
     // denotes start of new session.
     if ( preg_match( '/Sessions\\\(.*)\]/', $str, $matches ) ) {
+        // if session name doesn't have HostName, exclude it from result array
+        if( !isset($list[$i]['HostName']) ) unset($list[$i]);
+
         $list[++$i] = array();
-        $list[$i]['Host'] = urldecode( $matches[1] );
+        $h = urldecode( trim($matches[1]) );
+
+        // if session name like Default Settings, replace Host to star (*)
+        $list[$i]['Host'] = ("Default Settings" == $h) ? "*" : $h;
     }
 
     // parse username.
     if ( preg_match( '/"UserName"="(.*)"/', $str, $matches ) ) {
-        $list[$i]['User'] = $matches[1];
+        $u = trim($matches[1]);
+        if( strlen($u) > 0 ) $list[$i]['User'] = $matches[1];
     }
 
     // parse hostname.
     if ( preg_match( '/"HostName"="(.*)"/', $str, $matches ) ) {
-        $list[$i]['HostName'] = $matches[1];
+        $h = trim($matches[1]);
 
-        if ( strpos( $list[$i]['HostName'], '@' ) !== FALSE )
+        if ( strpos( $h, '@' ) !== FALSE )
         {
-            list( $u, $h ) = explode( '@', $list[$i]['HostName'] );
-
-            $list[$i]['HostName'] = $h;
-
+            list( $u, $h ) = explode( '@', $h );
             if( !isset($list[$i]['User']) && strpos( $u, ':' ) !== FALSE) {
                 list( $u, $p ) = explode( ':', $u );
                 $list[$i]['User'] = $u;
             }
         }
+
+        if( strlen($h) > 0 ) $list[$i]['HostName'] = $h;
     }
 
     // parse port.
     if ( preg_match( '/"PortNumber"="(.*)"/', $str, $matches ) ) {
-        $list[$i]['Port'] = hexdec($matches[1]);
+        $p = hexdec($matches[1]);
+        if( strlen($p) > 0 ) $list[$i]['Port'] = $p;
+
     }
 
     // parse PublicKeyFile.
